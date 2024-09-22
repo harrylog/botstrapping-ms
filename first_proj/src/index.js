@@ -4,14 +4,14 @@ const fs = require("fs");
 //
 // Throws an error if the PORT environment variable is missing.
 //
-if (!process.env.PORT) {
-    throw new Error("Please specify the port number for the HTTP server with the environment variable PORT.");
-}
+// if (!process.env.PORT) {
+//     throw new Error("Please specify the port number for the HTTP server with the environment variable PORT.");
+// }
 
 //
 // Extracts the PORT environment variable.
 //
-const PORT = process.env.PORT;
+const PORT = 3000||process.env.PORT;
 
 const app = express();
 
