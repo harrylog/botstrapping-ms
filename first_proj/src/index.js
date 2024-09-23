@@ -19,7 +19,7 @@ const app = express();
 // Registers a HTTP GET route for video streaming.
 //
 app.get("/video", async (req, res) => {
-    const videoPath = "../videos/SampleVideo_1280x720_1mb.mp4";
+    const videoPath = "./videos/SampleVideo_1280x720_1mb.mp4";
     const stats = await fs.promises.stat(videoPath);
 
     res.writeHead(200, {
