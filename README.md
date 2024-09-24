@@ -12,8 +12,5 @@
 
  http://localhost:3000/video?path=SampleVideo_1280x720_1mb.mp4
 
- PORT=3000
 
-STORAGE_ACCOUNT_NAME=videos
-
-STORAGE_ACCESS_KEY=5TI4gN9rFDJmtjX+47RMvbSuyKZR7dk33Gq84VF1pSAzLhT4rue+FZIGOTr7HNIGu0l01vryMfg5+AStItJpYA==
+docker compose --env-file .env up --build
