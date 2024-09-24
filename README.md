@@ -14,5 +14,4 @@
 
  PORT=3000
 
-STORAGE_ACCOUNT_NAME=videos
 
