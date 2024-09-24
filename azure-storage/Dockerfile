@@ -1,10 +1,9 @@
-FROM node:18.17.1
+FROM node:18.5.0-alpine
 
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install --only=production
 COPY ./src ./src
-COPY ./videos ./videos
 COPY .env .
 
 CMD npm start
