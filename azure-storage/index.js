@@ -3,7 +3,6 @@ const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storag
 
 require('dotenv').config()
 
-console.log(process.env)
 //
 // Throws an error if the any required environment variables are missing.
 //
@@ -12,64 +11,43 @@ if (!process.env.PORT) {
     throw new Error("Please specify the port number for the HTTP server with the environment variable PORT.");
 }
 
-if (!process.env.STORAGE_ACCOUNT_NAME) {
-    throw new Error("Please specify the name of an Azure storage account in environment variable STORAGE_ACCOUNT_NAME.");
+if (!process.env.VIDEO_STORAGE_HOST) {
+    throw new Error("Please specify the host name for the video storage microservice in variable VIDEO_STORAGE_HOST.");
 }
 
-if (!process.env.STORAGE_ACCESS_KEY) {
-    throw new Error("Please specify the access key to an Azure storage account in environment variable STORAGE_ACCESS_KEY.");
+if (!process.env.VIDEO_STORAGE_PORT) {
+    throw new Error("Please specify the port number for the video storage microservice in variable VIDEO_STORAGE_PORT.");
 }
 
 //
 // Extracts environment variables to globals for convenience.
 //
-
 const PORT = process.env.PORT;
-const STORAGE_ACCOUNT_NAME = process.env.STORAGE_ACCOUNT_NAME;
-const STORAGE_ACCESS_KEY = process.env.STORAGE_ACCESS_KEY;
-
-console.log(`Serving videos from Azure storage account ${STORAGE_ACCOUNT_NAME}.`);
-
-//
-// Create the Blob service API to communicate with Azure storage.
-//
-function createBlobService() {
-    const sharedKeyCredential = new StorageSharedKeyCredential(STORAGE_ACCOUNT_NAME, STORAGE_ACCESS_KEY);
-    const blobService = new BlobServiceClient(
-        `https://${STORAGE_ACCOUNT_NAME}.blob.core.windows.net`,
-        sharedKeyCredential
-    );
-    return blobService;
-}
+const VIDEO_STORAGE_HOST = process.env.VIDEO_STORAGE_HOST;
+const VIDEO_STORAGE_PORT = parseInt(process.env.VIDEO_STORAGE_PORT);
+console.log(`Forwarding video requests to ${VIDEO_STORAGE_HOST}:${VIDEO_STORAGE_PORT}.`);
 
 const app = express();
 
 //
-// Registers a HTTP GET route to retrieve videos from storage.
+// Registers a HTTP GET route for video streaming.
 //
-app.get("/video", async (req, res) => {
+app.get("/video", (req, res) => {
+    const forwardRequest = http.request( // Forward the request to the video storage microservice.
+        {
+            host: VIDEO_STORAGE_HOST,
+            port: VIDEO_STORAGE_PORT,
+            path: '/video?path=SampleVideo_1280x720_1mb.mp4', // Video path is hard-coded for the moment.
+            method: 'GET',
+            headers: req.headers
+        },
+        forwardResponse => {
+            res.writeHeader(forwardResponse.statusCode, forwardResponse.headers);
+            forwardResponse.pipe(res);
+        }
+    );
 
-    const videoPath = req.query.path;
-    console.log(`Streaming video from path ${videoPath}.`);
-    
-    const blobService = createBlobService();
-
-    const containerName = "videos";
-    const containerClient = blobService.getContainerClient(containerName);
-    const blobClient = containerClient.getBlobClient(videoPath);
-
-    const properties = await blobClient.getProperties();
-
-    //
-    // Writes HTTP headers to the response.
-    //
-    res.writeHead(200, {
-        "Content-Length": properties.contentLength,
-        "Content-Type": "video/mp4",
-    });
-
-    const response = await blobClient.download();
-    response.readableStreamBody.pipe(res);
+    req.pipe(forwardRequest);
 });
 
 //
@@ -78,6 +56,3 @@ app.get("/video", async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Microservice online`);
 });
-
-
-//q:how to use .env file?
