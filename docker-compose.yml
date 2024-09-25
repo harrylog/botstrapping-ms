@@ -8,12 +8,14 @@ services:
       dockerfile: Dockerfile
     container_name: video-storage
     ports:
-     - "4001:3000"
+     - "4001:${AZURE_STORAGE_PORT}"
+    env_file:
+      - .env
     environment:
-      - PORT=3000
-      - STORAGE_ACCOUNT_NAME=videos
-      - STORAGE_ACCESS_KEY=5TI4gN9rFDJmtjX+47RMvbSuyKZR7dk33Gq84VF1pSAzLhT4rue+FZIGOTr7HNIGu0l01vryMfg5+AStItJpYA==
-      - VIDEO_STORAGE_PORT=3000  # Add this line
+      - PORT=${AZURE_STORAGE_PORT}
+      - STORAGE_ACCOUNT_NAME=${AZURE_STORAGE_ACCOUNT_NAME}
+      - STORAGE_ACCESS_KEY=${AZURE_STORAGE_ACCESS_KEY}
+      - VIDEO_STORAGE_PORT=${AZURE_VIDEO_STORAGE_PORT}
     restart: "no"
 
   video-streaming:
@@ -23,11 +25,13 @@ services:
       dockerfile: Dockerfile
     container_name: video-streaming
     ports:
-     - "4002:3000"
+     - "4002:${VIDEO_STREAMING_PORT}"
+    env_file:
+      - .env
     environment:
-      - PORT=3000
-      - DBHOST=mongodb://db:27017
-      - DBNAME=video-streaming
-      - VIDEO_STORAGE_HOST=video-storage
-      - VIDEO_STORAGE_PORT=3000
+      - PORT=${VIDEO_STREAMING_PORT}
+      - DBHOST=${VIDEO_STREAMING_DBHOST}
+      - DBNAME=${VIDEO_STREAMING_DBNAME}
+      - VIDEO_STORAGE_HOST=${VIDEO_STREAMING_STORAGE_HOST}
+      - VIDEO_STORAGE_PORT=${VIDEO_STREAMING_STORAGE_PORT}
     restart: "no"

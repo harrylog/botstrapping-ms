@@ -1,58 +1,65 @@
 const express = require("express");
 const { BlobServiceClient, StorageSharedKeyCredential } = require("@azure/storage-blob");
 
-require('dotenv').config()
-
-//
-// Throws an error if the any required environment variables are missing.
-//
-
 if (!process.env.PORT) {
     throw new Error("Please specify the port number for the HTTP server with the environment variable PORT.");
 }
 
-if (!process.env.VIDEO_STORAGE_HOST) {
-    throw new Error("Please specify the host name for the video storage microservice in variable VIDEO_STORAGE_HOST.");
+if (!process.env.STORAGE_ACCOUNT_NAME) {
+    throw new Error("Please specify the name of an Azure storage account in environment variable STORAGE_ACCOUNT_NAME.");
 }
 
-if (!process.env.VIDEO_STORAGE_PORT) {
-    throw new Error("Please specify the port number for the video storage microservice in variable VIDEO_STORAGE_PORT.");
+if (!process.env.STORAGE_ACCESS_KEY) {
+    throw new Error("Please specify the access key to an Azure storage account in environment variable STORAGE_ACCESS_KEY.");
 }
 
-//
-// Extracts environment variables to globals for convenience.
-//
 const PORT = process.env.PORT;
-const VIDEO_STORAGE_HOST = process.env.VIDEO_STORAGE_HOST;
-const VIDEO_STORAGE_PORT = parseInt(process.env.VIDEO_STORAGE_PORT);
-console.log(`Forwarding video requests to ${VIDEO_STORAGE_HOST}:${VIDEO_STORAGE_PORT}.`);
+const STORAGE_ACCOUNT_NAME = process.env.STORAGE_ACCOUNT_NAME;
+const STORAGE_ACCESS_KEY = process.env.STORAGE_ACCESS_KEY;
+
+console.log(`Serving videos from Azure storage account ${STORAGE_ACCOUNT_NAME}.`);
+
+function createBlobService() {
+    const sharedKeyCredential = new StorageSharedKeyCredential(STORAGE_ACCOUNT_NAME, STORAGE_ACCESS_KEY);
+    const blobService = new BlobServiceClient(
+        `https://${STORAGE_ACCOUNT_NAME}.blob.core.windows.net`,
+        sharedKeyCredential
+    );
+    return blobService;
+}
 
 const app = express();
 
-//
-// Registers a HTTP GET route for video streaming.
-//
-app.get("/video", (req, res) => {
-    const forwardRequest = http.request( // Forward the request to the video storage microservice.
-        {
-            host: VIDEO_STORAGE_HOST,
-            port: VIDEO_STORAGE_PORT,
-            path: '/video?path=SampleVideo_1280x720_1mb.mp4', // Video path is hard-coded for the moment.
-            method: 'GET',
-            headers: req.headers
-        },
-        forwardResponse => {
-            res.writeHeader(forwardResponse.statusCode, forwardResponse.headers);
-            forwardResponse.pipe(res);
-        }
-    );
+app.get("/video", async (req, res) => {
+    const videoPath = req.query.path;
+    if (!videoPath) {
+        return res.status(400).send("No video path specified");
+    }
 
-    req.pipe(forwardRequest);
+    console.log(`Attempting to stream video from path ${videoPath}.`);
+    
+    const blobService = createBlobService();
+
+    const containerName = "videos";
+    const containerClient = blobService.getContainerClient(containerName);
+    const blobClient = containerClient.getBlobClient(videoPath);
+
+    try {
+        const properties = await blobClient.getProperties();
+
+        res.writeHead(200, {
+            "Content-Length": properties.contentLength,
+            "Content-Type": "video/mp4",
+        });
+
+        const response = await blobClient.download();
+        response.readableStreamBody.pipe(res);
+    } catch (error) {
+        console.error("Error streaming video:", error);
+        res.status(404).send("Video not found or error occurred while streaming");
+    }
 });
 
-//
-// Starts the HTTP server.
-//
 app.listen(PORT, () => {
-    console.log(`Microservice online`);
+    console.log(`Azure Storage microservice online on port ${PORT}`);
 });
