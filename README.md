@@ -18,3 +18,5 @@ docker compose --env-file .env up --build
  docker login hrylog.azurecr.io --username hrylog --password 3UB3AD9fG8z5VTLpWr5FRzMtMT0w8YJv9BJQp5VTEK+ACRC5O3BK
 
  docker push hrylog.azurecr.io/video-stream:latest 
+
+ http://localhost:4001/video?path=SampleVideo_1280x720_1mb.mp4

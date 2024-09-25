@@ -35,5 +35,6 @@ services:
       - VIDEO_STORAGE_HOST=video-storage
       - VIDEO_STORAGE_PORT=3000
       - DBHOST=mongodb://db:27017
+      - DBNAME=video-streaming
 
     restart: "no"
