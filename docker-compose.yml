@@ -1,12 +1,12 @@
 version: '3'
 services:
 
-  # db:
-  #   image: mongo:7.0.0
-  #   container_name: db
-  #   ports:
-  #    - "4000:27017"
-  #   restart: always
+  db:
+    image: mongo:7.0.0
+    container_name: db
+    ports:
+     - "4000:27017"
+    restart: always
 
   azure-storage:
     image: azure-storage
@@ -18,8 +18,9 @@ services:
      - "4001:3000"
     environment:
       - PORT=3000
-      - STORAGE_ACCOUNT_NAME=${STORAGE_ACCOUNT_NAME}
-      - STORAGE_ACCESS_KEY=${STORAGE_ACCESS_KEY}
+      - STORAGE_ACCOUNT_NAME=videos
+      - STORAGE_ACCESS_KEY=5TI4gN9rFDJmtjX+47RMvbSuyKZR7dk33Gq84VF1pSAzLhT4rue+FZIGOTr7HNIGu0l01vryMfg5+AStItJpYA==
+
     restart: "no"
 
   video-streaming:
