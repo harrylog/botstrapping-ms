@@ -22,4 +22,5 @@ docker compose --env-file .env up --build
  http://localhost:4001/video?path=SampleVideo_1280x720_1mb.mp4
 
  docker compose down --remove-orphans --volumes
-  docker compose up --build --remove-orphans     
+
+docker compose build --no-cache && docker compose up --build --remove-orphans

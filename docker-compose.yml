@@ -38,3 +38,11 @@ services:
       - DBNAME=video-streaming
 
     restart: "no"
+
+  seeder:
+    build: 
+      context: ./seeder
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    restart: "no"
