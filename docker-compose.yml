@@ -1,13 +1,6 @@
 version: '3'
 services:
 
-  db:
-    image: mongo:7.0.0
-    container_name: db
-    ports:
-     - "4000:27017"
-    restart: always
-
   azure-storage:
     image: azure-storage
     build: 
@@ -20,7 +13,7 @@ services:
       - PORT=3000
       - STORAGE_ACCOUNT_NAME=videos
       - STORAGE_ACCESS_KEY=5TI4gN9rFDJmtjX+47RMvbSuyKZR7dk33Gq84VF1pSAzLhT4rue+FZIGOTr7HNIGu0l01vryMfg5+AStItJpYA==
-
+      - VIDEO_STORAGE_PORT=3000  # Add this line
     restart: "no"
 
   video-streaming:
@@ -37,6 +30,4 @@ services:
       - DBNAME=video-streaming
       - VIDEO_STORAGE_HOST=video-storage
       - VIDEO_STORAGE_PORT=3000
-    depends_on:
-      - db
     restart: "no"
