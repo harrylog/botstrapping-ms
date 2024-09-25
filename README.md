@@ -20,3 +20,6 @@ docker compose --env-file .env up --build
  docker push hrylog.azurecr.io/video-stream:latest 
 
  http://localhost:4001/video?path=SampleVideo_1280x720_1mb.mp4
+
+ docker compose down --remove-orphans --volumes
+  docker compose up --build --remove-orphans     
