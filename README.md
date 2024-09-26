@@ -28,3 +28,5 @@ docker compose build --no-cache && docker compose up --build --remove-orphans
 http://localhost:4002/video?id=5d9e690ad76fe06a3d7ae416
 
 http://localhost:4001/video?path=SampleVideo_1280x720_1mb.mp4
+
+http://localhost:15672/#/
