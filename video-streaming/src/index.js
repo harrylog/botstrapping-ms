@@ -46,6 +46,8 @@ async function main() {
     const app = express();
         
     app.get("/video", async (req, res) => {
+        console.log('VIDEO-STREAM MS')
+        
         const videoId = new mongodb.ObjectId(req.query.id);
         const videoRecord = await videosCollection.findOne({ _id: videoId });
         if (!videoRecord) {
@@ -55,7 +57,7 @@ async function main() {
         }
 
         console.log(`Translated id ${videoId} to path ${videoRecord.videoPath}.`);
-
+        console.log('VIDEO-STREAM MS')
         const forwardRequest = http.request( // Forward the request to the video storage microservice.
             {
                 host: VIDEO_STORAGE_HOST,

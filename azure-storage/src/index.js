@@ -31,6 +31,7 @@ function createBlobService() {
 const app = express();
 
 app.get("/video", async (req, res) => {
+    console.log('AZURE-STORAGE MS')
     const videoPath = req.query.path;
     if (!videoPath) {
         return res.status(400).send("No video path specified");
@@ -46,6 +47,7 @@ app.get("/video", async (req, res) => {
 
     try {
         const properties = await blobClient.getProperties();
+        console.log('AZURE-STORAGE MS')
 
         res.writeHead(200, {
             "Content-Length": properties.contentLength,
