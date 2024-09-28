@@ -30,3 +30,18 @@ http://localhost:4002/video?id=5d9e690ad76fe06a3d7ae416
 http://localhost:4001/video?path=SampleVideo_1280x720_1mb.mp4
 
 http://localhost:15672/#/
+
+docker exec -it db mongosh
+use history
+db.history.find().pretty().limit(5)
+
+
+
+
+
+
+
+
+
+
+
