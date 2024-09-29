@@ -20,10 +20,10 @@ spec:
           image: hrylog.azurecr.io/video-streaming:1
           imagePullPolicy: Always
           ports:
-            - containerPort: 3000 # Change this to 3000
+            - containerPort: 3000 
           env:
             - name: PORT
-              value: "3000" # Change this to 3000
+              value: "3000" 
           resources:
             limits:
               memory: "512Mi"
@@ -43,5 +43,5 @@ spec:
   ports:
     - protocol: TCP
       port: 3000
-      targetPort: 3000 # Change this to 3000
+      targetPort: 3000 
       nodePort: 30001
