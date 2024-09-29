@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: acr-auth-secret
+type: kubernetes.io/dockerconfigjson
+stringData:
+  .dockerconfigjson: |
+    {
+      "auths": {
+        "hrylog.azurecr.io": {
+          "username": "hrlog",
+          "password": "3UB3AD9fG8z5VTLpWr5FRzMtMT0w8YJv9BJQp5VTEK+ACRC5O3BK",
+          "auth": "aHJ5bG9nOjNVQjNBRDlmRzh6NVZUTHBXcjVGUnpNdE1UMHc4WUp2OUJKUXA1VlRFSytBQ1JDNU8zQks="
+        }
+      }
+    }
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: acr-service-account
+imagePullSecrets:
+- name: acr-auth-secret
