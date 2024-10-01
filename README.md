@@ -52,3 +52,5 @@ https://portal.azure.com/#@harry8loghotmail.onmicrosoft.com/resource/subscriptio
 az provider list --query "[?registrationState=='NotRegistered']" -o table
 "If you see relevant providers (like Microsoft.Compute), register them with:"
 az provider register --namespace Microsoft.Compute
+
+https://github.com/bootstrapping-microservices-2nd-edition/chapter-7
