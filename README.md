@@ -45,3 +45,10 @@ https://github.com/bootstrapping-microservices-2nd-edition/chapter-6
 https://portal.azure.com/#@harry8loghotmail.onmicrosoft.com/resource/subscriptions/0db10612-d082-4523-a57b-cdb9f1747a03/resourceGroups/video-stream-ms/providers/Microsoft.Storage/storageAccounts/hrylog/containersList
 
 
+Usage + quotas
+https://portal.azure.com/#@harry8loghotmail.onmicrosoft.com/resource/subscriptions/0db10612-d082-4523-a57b-cdb9f1747a03/quotas
+
+
+az provider list --query "[?registrationState=='NotRegistered']" -o table
+"If you see relevant providers (like Microsoft.Compute), register them with:"
+az provider register --namespace Microsoft.Compute
