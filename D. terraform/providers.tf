@@ -1,5 +1,3 @@
-# Initialises Terraform providers and sets their version numbers.
-
 terraform {
   required_providers {
     azurerm = {
@@ -13,4 +11,5 @@ terraform {
 
 provider "azurerm" {
   features {}
+  skip_provider_registration = true
 }
