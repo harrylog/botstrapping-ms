@@ -54,3 +54,8 @@ az provider list --query "[?registrationState=='NotRegistered']" -o table
 az provider register --namespace Microsoft.Compute
 
 https://github.com/bootstrapping-microservices-2nd-edition/chapter-7
+
+
+ az aks get-credentials --resource-group flixtube8ms --name flixtube8ms --overwrite-existing
+
+ az acr credential show --name flixtube8ms --output table
