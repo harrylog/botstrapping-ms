@@ -59,3 +59,14 @@ https://github.com/bootstrapping-microservices-2nd-edition/chapter-7
  az aks get-credentials --resource-group flixtube8ms --name flixtube8ms --overwrite-existing
 
  az acr credential show --name flixtube8ms --output table
+
+
+docker build -t video-streaming:1 --file Dockerfile-prod . 
+
+
+ docker tag video-stream flixtube8ms.azurecr.io/video-streaming:1
+
+
+ docker push flixtube8ms.azurecr.io/video-streaming:1
+
+ az aks get-credentials --resource-group flixtube8ms --name flixtube8ms --overwrite-existing
